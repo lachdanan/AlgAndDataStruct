@@ -1,24 +1,27 @@
 # Uses python3
+from decimal import Decimal
 
 def looting(n, w, listValues, listWeights):
     value = 0
     ratios = list()
     for i in range(0, n):
         ratios.append(listValues[i] / listWeights[i])
-    if len(ratios) == 1:
-        value = listValues[0]
+    if n == 1:
+        if w > listWeights[0]:
+            value = listValues[0]
+        else:
+            value = ratios[0] * w
     else:
         while w > 0 and len(ratios) > 0:
             best = max(ratios)
             index = ratios.index(best)
             if listWeights[index] <= w:
                 w -= listWeights[index]
+                value += listValues[index]
             else:
-                we = w / listWeights[index]
-                value += we * ratios[index]
-                w = 0
-            value += listValues[index]
-            ratios.remove(best)
+                value += w * ratios[index]
+                w -= w
+            ratios.pop(index)
             listWeights.remove(listWeights[index])
             listValues.remove(listValues[index])
     return value
